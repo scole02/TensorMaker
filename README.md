@@ -1,3 +1,3 @@
 # Here is a Readme
 for project...
-![alt text](https://github.com/scole02/TensorMaker/TensorMaker.jpg?raw=true)
+![alt text](https://github.com/scole02/TensorMaker/TensorMaker.jpg)
