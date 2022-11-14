@@ -1,3 +1,3 @@
 # Here is a Readme
 for project...
-![alt text](https://github.com/scole02/TensorMaker/TensorMaker.jpg)
+<img src="/scole02/TensorMaker/TensorMaker.jpg" alt="Alt text" title="Landing Page">
