@@ -1,5 +1,3 @@
-# Here is a Readme
-for project...
-//<img src="/scole02/TensorMaker/TensorMaker.jpg" alt="Alt text" title="Landing Page">
-//TensorMaker.jpg
-https://github.com/scole02/TensorMaker/blob/a695e4feac97cab823084c94c019556c2793576d/TensorMaker.jpg
+# TensorMaker
+ML for everyone!
+![TensorMaker](https://user-images.githubusercontent.com/11849162/201575651-a918c3b1-fcdb-42bb-84ca-c24b8d1fa7a8.jpg)
