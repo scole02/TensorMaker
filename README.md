@@ -5,8 +5,8 @@ ML for everyone!
 ## Feature List:
 - [ ] **Simple GUI non-technical Model Maker** 
   - [ ] **Simple Image Classifcation Model Maker**
-    - [ ] Frontend:
-    - [ ] Backend:
+    - [ ] Frontend
+    - [ ] Backend
   - [ ] **Simple Object Detection Model Maker**
   
 - [ ] **Data Annotation (Collaborative)**
