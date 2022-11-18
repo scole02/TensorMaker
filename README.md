@@ -1,6 +1,7 @@
 # TensorMaker
 ML for everyone!
-![TensorMaker](https://user-images.githubusercontent.com/11849162/201575651-a918c3b1-fcdb-42bb-84ca-c24b8d1fa7a8.jpg)
+![image](https://user-images.githubusercontent.com/11849162/202806131-cf87b046-e2c8-48d3-b190-bfb131d2f7c8.png)
+
 
 ## Feature List:
 - [ ] **Simple GUI non-technical Model Maker** 
