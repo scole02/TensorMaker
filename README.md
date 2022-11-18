@@ -33,6 +33,6 @@ ML for everyone!
   - [ ] **Import externally generated labels off all standard types**
 
 ## Future Features
-- [ ] **Experiment Trakcer**
+- [ ] **Experiment Tracker**
 - [ ] **Hyper-parameter Tuner**
 - [ ] **Model Selector**
