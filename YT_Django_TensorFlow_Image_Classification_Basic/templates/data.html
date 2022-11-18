@@ -1,0 +1,31 @@
+<div>
+    <p>Class</p>
+</div>
+
+<input id="class" placeholder="Enter Class Name here" />
+
+<button id="button">Submit</button>
+
+<!-- <button id="other">Submit</button> -->
+<form id="class_form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="imageFiles" webkitdirectory multiple />
+    <input type="submit" name="submit" value="Upload" />
+</form>
+
+<script>
+    const myInput = document.getElementById('class')
+    const myButton = document.getElementById('button')
+    const form = document.getElementById('class_form')
+
+    form.style.display = 'none'
+
+    myButton.addEventListener('click', function(event) {
+    
+      const myInputValue = myInput.value;
+    
+      form.style.display = 'block'
+    
+    //   other.innerHTML = myInputValue
+})
+</script>
