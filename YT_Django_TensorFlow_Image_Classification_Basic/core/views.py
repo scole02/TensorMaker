@@ -19,7 +19,9 @@ import torch.backends.cudnn as cudnn
 import numpy as np
 import torchvision
 from torchvision import datasets, models, transforms
+from torch.utils.data import Dataset, DataLoader
 import matplotlib.pyplot as plt
+from skimage import io, transform
 import time
 import os
 import copy
@@ -58,18 +60,18 @@ def data(request):
         #
         # Django image API
         #
-        dir = request.FILES
-        print(dir)
-        print(dir.getlist('imageFiles'))
-        dir_name = default_storage.save(dir.name, dir)
-        data_dir = default_storage.path(dir_name)
+        dir = request.FILES.getlist('classFiles1')
+        temp_file = dir[0].temporary_file_path
+        paths = [f.temporary_file_path() for f in dir]
+        dataset = ImageDataset(paths)
 
         # image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
         #                                           data_transforms[x])
         #                   for x in ['train', 'val']}
-        # dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4,
-        #                                              shuffle=True, num_workers=4)
-        #               for x in ['train', 'val']}
+        dataloaders = {x: torch.utils.data.DataLoader(dataset, batch_size=4,
+                                                     shuffle=True, num_workers=4)
+                      for x in ['train', 'val']}
+        print(paths)
         # dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
         # class_names = image_datasets['train'].classes
 
@@ -131,3 +133,23 @@ def test(request):
         return render(request, "test.html")
     
     return render(request, "test.html")
+
+
+class ImageDataset(Dataset):
+    # https://pytorch.org/tutorials/beginner/data_loading_tutorial.html#dataset-class
+    def __init__(self, filepaths: list):
+        """
+        Args:
+            filepaths[] (string): list of the images filepaths.
+        """
+        self.filepaths = filepaths
+
+    def __len__(self):
+        return len(self.filepaths)
+    
+    def __getitem__(self, idx):
+        img_name = self.filepaths[idx]
+        image = io.imread(img_name)
+        sample = {'image': image}
+
+        return sample
