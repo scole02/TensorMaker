@@ -1,15 +1,22 @@
 <div>
-    <p>Class</p>
+    <h1>Setup Model:</h1>
 </div>
 
-<input id="class" placeholder="Enter Class Name here" />
 
-<button id="button">Submit</button>
+
+<!-- button id="button">Submit</button> <br /><br />
+<h4>Number of Classes:</h4>
+<input id="classnum" placeholder="Enter Number of Classes" />
+<button id="button2">Submit</button>-->
+
 
 <!-- <button id="other">Submit</button> -->
+<h4>Class Name:</h4>
 <form id="class_form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="file" name="imageFile webkitdirectory mozdirectory" />
+    <input name="classinput" placeholder="Enter Class Name here" /> 
+    <br />
+    <input type="file" name="classFiles1" webkitdirectory mozdirectory />
     <input type="submit" name="submit" value="Upload" />
 </form>
 
@@ -18,7 +25,7 @@
     const myButton = document.getElementById('button')
     const form = document.getElementById('class_form')
 
-    form.style.display = 'none'
+    // form.style.display = 'none'
 
     myButton.addEventListener('click', function(event) {
     
