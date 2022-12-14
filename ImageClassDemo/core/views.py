@@ -24,7 +24,7 @@ from torch.utils.data import Dataset, DataLoader
 import matplotlib.pyplot as plt
 from skimage import io, transform
 import time
-import os
+import os, shutil
 import copy
 import mpld3
 from mpld3 import plugins, utils
@@ -66,15 +66,32 @@ def data(request):
         # form = NameForm(request.POST)
         files = request.FILES.getlist('classFiles1')
         className = request.POST.get('classinput')
+        submitbutton= request.POST.get('Submit')
         print(className)
         # temp_file = dir[0].temporary_file_path
         paths = [f.temporary_file_path() for f in files]
-        dirname = os.path.dirname(paths[0])
+        
         # make directory for class files
-        # os.mkdir(os.path.join(dirname, form.))
+        train_dirname = os.path.join(os.getcwd(), "media", "train", className)
+        val_dirname = os.path.join(os.getcwd(), "media", "val", className)
+        
+        # if directories do not exist, make them and copy over temp files
+        if not os.path.exists(train_dirname):
+            os.makedirs(train_dirname)  
+            for p in paths[:int( len(paths) * train_split)]:
+                new_path = os.path.join(train_dirname, os.path.basename(p))
+                shutil.copy(p, new_path)
+    
+        if not os.path.exists(val_dirname):
+            os.makedirs(val_dirname)
+            for p in paths[int( len(paths) * train_split):]:
+                new_path = os.path.join(val_dirname, os.path.basename(p))
+                shutil.copy(p, new_path)
+            
 
-        train_dataset = ImageDataset(paths[:int( len(paths) * train_split)])
-        val_dataset = ImageDataset(paths[int( len(paths) * (train_split)):])
+        # ImageFolder expects a folder with name of class and then images
+        train_dataset = datasets.ImageFolder(os.path.dirname(train_dirname), data_transforms['train'])
+        val_dataset = datasets.ImageFolder(os.path.dirname(val_dirname), data_transforms['val'])
         print(f'len train:{len(train_dataset)} len val: {len(val_dataset)}')
 
         train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=4,
@@ -82,8 +99,9 @@ def data(request):
         val_dataloader = torch.utils.data.DataLoader(val_dataset, batch_size=4,
                                                      shuffle=True, num_workers=4)
         dataloaders = {'train': train_dataloader, 'val': val_dataloader}
-        dataset_sizes = {'train' : len(train_dataset), 'test' : len(val_dataset)}
+        dataset_sizes = {'train' : len(train_dataset), 'val' : len(val_dataset)}
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 
         model_ft = models.resnet18(pretrained=True)
         num_ftrs = model_ft.fc.in_features
@@ -100,7 +118,6 @@ def data(request):
 
         # Decay LR by a factor of 0.1 every 7 epochs
         exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
-        # print(train_dataset[0])
         train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataset_sizes, dataloaders, device)
 
 
@@ -119,34 +136,6 @@ def test(request):
         #
         # Django image API
         #
-        dir = request.FILES["imageFile"]
-        dir_name = default_storage.save(dir.name, dir)
-        data_dir = default_storage.path(dir_name)
-
-        image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
-                                                  data_transforms[x])
-                          for x in ['train', 'val']}
-        dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4,
-                                                     shuffle=True, num_workers=4)
-                      for x in ['train', 'val']}
-        dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
-        class_names = image_datasets['train'].classes
-
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-        # Get a batch of training data
-        inputs, classes = next(iter(dataloaders['train']))
-
-        # Make a grid from batch
-        out = torchvision.utils.make_grid(inputs)
-
-        inp = out.numpy().transpose((1, 2, 0))
-        mean = np.array([0.485, 0.456, 0.406])
-        std = np.array([0.229, 0.224, 0.225])
-        inp = std * inp + mean
-        inp = np.clip(inp, 0, 1)
-        data = im.fromarray(inp)
-        data.save('test.png')
 
         return render(request, "test.html")
 
