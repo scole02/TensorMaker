@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
 from .forms import TrainingParamForm
 
+def label(request):
+    return render(request, 'trainer/label.html')
+    
 def setup_page(request):
     submitted = False
     if(request.method == "POST"):
