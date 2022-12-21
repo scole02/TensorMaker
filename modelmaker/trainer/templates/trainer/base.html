@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
-    <!-- Navbar -->
+    <!-- Navbar
     <nav class="navbar bg-light">
         <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'index' %}">TensorMaker</a>
@@ -17,6 +17,20 @@
                 <a class="nav-link" href="{% url 'setup' %}">Model Trainer</a>
             </li>
         </ul>
+        </div>
+    </nav> -->
+
+    <nav class="navbar bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <img src="https://github.com/scole02/TensorMaker/blob/main/modelmaker/modelmaker/static/TensorMakerTempLogo.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                TensorMaker
+            </a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'setup' %}">Model Trainer</a>
+                </li>
+            </ul>
         </div>
     </nav>
     {% block content %}
