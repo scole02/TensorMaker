@@ -9,6 +9,20 @@
             <div class="card-body">
                 <h2><b>Simple Classification Trainer:</b> Setup</h2>
                 <center><p>submitted successfully!</p></center>
+                <h4>Model Name:{{params_form.model_name}}</h4>
+                <h4>Number of Categories: {{params_form.number_of_categories}} </h4>
+                <form action="{% url 'trainer:save_categories' %}" method="POST">
+                    {% csrf_token %}
+                    {{ formset.management_form }}
+                    <ul class="list-group">
+                        {% for form in formset %}
+                        <li class="list-group-item">{{ form }}</li>
+                        {% endfor %}
+                    </ul>
+                    <input type="submit" value="Train" class="btn btn-light">
+                </form>   
+            </div>       
+
             </div>
         </div>
     </div>
@@ -21,7 +35,7 @@
                 <br />
                 <form action="" method="POST">
                     {% csrf_token %}
-                    {{ form.as_p }}
+                    {{ params_form.as_p }}
                     <input type="submit" value="Submit" class="btn btn-light">
                 </form>     
             </div>       

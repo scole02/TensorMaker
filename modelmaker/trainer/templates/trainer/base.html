@@ -8,44 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
-    <!-- Navbar
-    <nav class="navbar bg-light">
-        <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'index' %}">TensorMaker</a>
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'setup' %}">Model Trainer</a>
-            </li>
-        </ul>
-        </div>
-    </nav> 
-
-    <nav class="navbar bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'index' %}">
-                <img src="{% static 'logo/betterlogo.svg' %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top"/>
-                TensorMaker
-            </a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'setup' %}">Model Trainer</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'setup' %}">Projects</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'setup' %}">Deploy</a>
-                    </li>
-    
-                </ul>
-            </div>
-        </div>
-    </nav>-->
-
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{% url 'index' %}">
+          <a class="navbar-brand" href="{% url 'trainer:index' %}">
             <img src="{% static 'logo/betterlogo.svg' %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top"/>
             TensorMaker
           </a>
@@ -55,26 +21,28 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'trainer:index' %}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'setup' %}">Train</a>
+                <a class="nav-link" href="{% url 'trainer:setup' %}">Train</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'label' %}">Label</a>
+                <a class="nav-link" href="{% url 'trainer:label' %}">Label</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'setup' %}">Deploy</a>
+                <a class="nav-link" href="{% url 'trainer:setup' %}">Deploy</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Dropdown
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><a class="dropdown-item" href="#">Upload</a></li>
+                  <li><a class="dropdown-item" href="#">Organize</a></li>
+                  <li><a class="dropdown-item" href="#">Annotate</a></li>
+                  <li><a class="dropdown-item" href="#">Train</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  <li><a class="dropdown-item" href="#">Deploy</a></li>
                 </ul>
               </li>
             </ul>
