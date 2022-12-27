@@ -12,9 +12,8 @@ def fileupload():
 def save_categories(request):
     trained = False
     if(request.method == "POST"):
-        print(request.POST)
         CategoryFormSet = formset_factory(CategoryFileForm, extra=3)
-        formset = CategoryFormSet(request.POST)
+        formset = CategoryFormSet(request.POST, request.FILES)
         for form in formset:
             if form.is_valid():
                 print("saving")
@@ -22,6 +21,13 @@ def save_categories(request):
             else:
                 print("form not valid")
                 print(form.errors)
+        # f = CategoryForm(request.POST, request.FILES)
+        # if f.is_valid():
+        #     f.save()
+        # else:
+        #     print(f.errors)    
+        print(request.POST)
+        print(request.FILES)
         return render(request, 'trainer/base.html')
 
     # else:    

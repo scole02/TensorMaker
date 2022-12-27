@@ -11,7 +11,7 @@
                 <center><p>submitted successfully!</p></center>
                 <h4>Model Name:{{params_form.model_name}}</h4>
                 <h4>Number of Categories: {{params_form.number_of_categories}} </h4>
-                <form action="{% url 'trainer:save_categories' %}" method="POST">
+                <form action="{% url 'trainer:save_categories' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ formset.management_form }}
                     <ul class="list-group">
@@ -19,6 +19,7 @@
                         <li class="list-group-item">{{ form }}</li>
                         {% endfor %}
                     </ul>
+                    {% comment %} <input type="file" name="myfile"> {% endcomment %}
                     <input type="submit" value="Train" class="btn btn-light">
                 </form>   
             </div>       

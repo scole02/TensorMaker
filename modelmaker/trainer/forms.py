@@ -12,7 +12,7 @@ class CategoryForm(ModelForm):
 
     class Meta:
         model =  Category
-        fields = ('name',) # whats rendered
+        fields = ('name', ) # whats rendered
 
 class CategoryFileForm(CategoryForm):
     file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
