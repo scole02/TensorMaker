@@ -54,7 +54,7 @@ def setup_page(request):
             
     return render(request, 'trainer/setup.html', {'params_form':params_form, 'submitted':submitted})
 
-# Create your views here.
+# Create your views here. 
 def index(request):
 
     return render(request, 'trainer/base.html')
