@@ -11,7 +11,7 @@ from django.template.defaultfilters import filesizeformat
 #from django.core.files.storage import FileSystemStorage
 
 MAX_FILE_SIZE = 24 * 1024 * 1024 # 24 MBs 
-fs = FileSystemStorage(location='/media/imgs')
+# fs = FileSystemStorage(location='/media/imgs')
 
 # Create your models here.
 class ModelTrainingParams(models.Model):
@@ -107,6 +107,7 @@ class Category(models.Model):
 class File(models.Model):
      category = models.ForeignKey(Category,on_delete=models.CASCADE)
     #  validator = FileValidator(max_size=MAX_FILE_SIZE)
-     file = models.FileField(blank=False, storage=fs, verbose_name="Files", help_text=f'Allowed size is {MAX_FILE_SIZE / (1024*1024)} MBs')
+     file = models.FileField(blank=False, upload_to='PN_files/%Y/%m/%d/', verbose_name="Files", help_text=f'Allowed size is {MAX_FILE_SIZE / (1024*1024)} MBs')
+
 # upload_to='PN_files/%Y/%m/%d/'
 

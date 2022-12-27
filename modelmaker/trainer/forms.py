@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelForm, ClearableFileInput
 from .models import ModelTrainingParams, Category, File
 
 # Create ModelTrainingParams form
@@ -19,5 +19,8 @@ class CategoryFileForm(CategoryForm):
  
     class Meta(CategoryForm.Meta):
         model = Category
-        fields = CategoryForm.Meta.fields + ('file',)   
+        fields = CategoryForm.Meta.fields   
+        widgets =  {
+            'images': ClearableFileInput(attrs={'multiple': True}),
+        }
         

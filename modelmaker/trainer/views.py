@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
 from .forms import TrainingParamForm, CategoryForm, CategoryFileForm
 from django.forms import formset_factory
+from .models import File, Category
 
 def label(request):
     return render(request, 'trainer/label.html')
@@ -14,20 +15,31 @@ def save_categories(request):
     if(request.method == "POST"):
         CategoryFormSet = formset_factory(CategoryFileForm, extra=3)
         formset = CategoryFormSet(request.POST, request.FILES)
-        for form in formset:
+        print(request.FILES)
+        for form in formset: # loop through categories
             if form.is_valid():
                 print("saving")
-                form.save()
-            else:
-                print("form not valid")
-                print(form.errors)
+                category = form.save()
+                for form_key in request.FILES.keys():
+                    files = request.FILES.getlist(form_key)
+                    for f in files:
+                        new_file, created = File.objects.get_or_create(category=Category(id=category.id), file=f)
+                        new_file.save()
+
+            #     for files in request.FILES.values(): # save all files to each category
+            #         print(files)
+            #         for f in files:
+            #             File.objects.get_or_create(category=Category(id=category.id, file=f))
+            # else:
+            #     print("form not valid")
+            #     print(form.errors)
         # f = CategoryForm(request.POST, request.FILES)
         # if f.is_valid():
         #     f.save()
         # else:
         #     print(f.errors)    
-        print(request.POST)
-        print(request.FILES)
+        # print(request.POST)
+        # print(request.FILES)
         return render(request, 'trainer/base.html')
 
     # else:    
