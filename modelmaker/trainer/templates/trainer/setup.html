@@ -9,9 +9,9 @@
             <div class="card-body">
                 <h2><b>Simple Classification Trainer:</b> Setup</h2>
                 <center><p>submitted successfully!</p></center>
-                <h4>Model Name:{{params_form.model_name}}</h4>
-                <h4>Number of Categories: {{params_form.number_of_categories}} </h4>
-                <form action="{% url 'trainer:save_categories' %}" method="POST" enctype="multipart/form-data">
+                <h4>Model Name:{{params_obj.model_name}}</h4>
+                <h4>Number of Categories: {{params_obj.number_of_categories}} </h4>
+                <form action="{% url 'trainer:save_categories' params_obj.id %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ formset.management_form }}
                     <ul class="list-group">

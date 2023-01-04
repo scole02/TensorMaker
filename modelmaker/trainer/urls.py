@@ -10,5 +10,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('setup', views.setup_page, name='setup'),
     path('label', views.label, name='label'),
-    path('save_categories', views.save_categories, name='save_categories'),
+    path('<int:params_id>/save_categories', views.save_categories, name='save_categories'),
 ]
