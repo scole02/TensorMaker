@@ -8,10 +8,10 @@
         <div class="card">
             <div class="card-body">
                 <h2><b>Simple Classification Trainer:</b> Setup</h2>
-                <center><p>submitted successfully!</p></center>
+                <center><p>valid file formats: .jpg, .jpeg, .png,(normal image file formats...)</p></center>
                 <h4>Model Name:{{params_obj.model_name}}</h4>
                 <h4>Number of Categories: {{params_obj.number_of_categories}} </h4>
-                <form action="{% url 'trainer:save_categories' params_obj.id %}" method="POST" enctype="multipart/form-data">
+                <form action="{% url 'trainer:save_categories' params_model.id %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ formset.management_form }}
                     <ul class="list-group">
@@ -19,6 +19,9 @@
                         <li class="list-group-item">{{ form }}</li>
                         {% endfor %}
                     </ul>
+                    {% if error %}
+                        <b><p id="badfile"> Upload a valid image. The file you uploaded was either not an image or a corrupted image </p></b>
+                    {% endif %}
                     {% comment %} <input type="file" name="myfile"> {% endcomment %}
                     <input type="submit" value="Train" class="btn btn-light">
                 </form>   

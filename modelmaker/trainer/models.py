@@ -6,6 +6,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.template.defaultfilters import filesizeformat
+from django.core.validators import validate_image_file_extension
 #from django.core.files import File
 #from django.core.files.storage import default_storage
 #from django.core.files.storage import FileSystemStorage
@@ -40,7 +41,12 @@ class Category(models.Model):
 class Image(models.Model):
      category = models.ForeignKey(Category, on_delete=models.CASCADE)
     #  validator = FileValidator(max_size=MAX_FILE_SIZE)
-     file = models.ImageField(blank=False, upload_to='PN_files/%Y/%m/%d/', verbose_name="Files", help_text=f'Allowed size is {MAX_FILE_SIZE / (1024*1024)} MBs')
+     file = models.ImageField(blank=False, 
+                            upload_to='PN_files/%Y/%m/%d/', 
+                            verbose_name="Files", 
+                            validators=[validate_image_file_extension],
+                            #help_text=f'Allowed size is {MAX_FILE_SIZE / (1024*1024)} MBs'
+                            )
 
 # upload_to='PN_files/%Y/%m/%d/'
 

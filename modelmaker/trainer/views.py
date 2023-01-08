@@ -35,7 +35,13 @@ def save_categories(request, params_id):
                 print("form not valid")
                 print(form.errors)
                 print(form.clean())
-                return render(request, 'trainer/error.html') 
+
+                submitted = True
+                error = True
+                # get the parameters model and make a form
+                params_model = ModelTrainingParams.objects.get(pk=params_id)
+
+                return render(request, 'trainer/setup.html', {'params_model':params_model, 'submitted':submitted, 'error':error}) 
 
             #     for files in request.FILES.values(): # save all files to each category
             #         print(files)
@@ -58,21 +64,22 @@ def save_categories(request, params_id):
 
 def setup_page(request):
     submitted = False
+    
     if(request.method == "POST"):
         params_form= TrainingParamForm(request.POST)
         if params_form.is_valid():
-            params_obj = params_form.save()
+            params_model = params_form.save()
             number_categories = params_form.cleaned_data['number_of_categories']
             CategoryFormSet = formset_factory(CategoryFileForm, extra=number_categories)
             # formset = CategoryFormSet(initial = [{'model_id':params_obj.id}])
-            return render(request, 'trainer/setup.html', {'submitted':True, 'formset':CategoryFormSet, 'params_obj':params_obj})
+            return render(request, 'trainer/setup.html', {'submitted':True, 'formset':CategoryFormSet, 'params_model':params_model})
                 
     else:
         params_form = TrainingParamForm
         if 'submitted' in request.GET:
             submitted = True
             
-    return render(request, 'trainer/setup.html', {'params_form':params_form, 'submitted':submitted})
+    return render(request, 'trainer/setup.html', {'params_form':params_form, 'submitted':submitted, 'error': False})
 
 # Create your views here. 
 def index(request):
