@@ -11,4 +11,6 @@ urlpatterns = [
     path('setup', views.setup_page, name='setup'),
     path('label', views.label, name='label'),
     path('<int:params_id>/save_categories', views.save_categories, name='save_categories'),
+    path('<int:params_id>/training', views.training, name='training'),
+
 ]

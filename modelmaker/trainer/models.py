@@ -17,7 +17,7 @@ MAX_FILE_SIZE = 24 * 1024 * 1024 # 24 MBs
 # Create your models here.
 class ModelTrainingParams(models.Model):
     model_name = models.CharField(max_length=200)
-    number_of_categories = models.IntegerField(default=1)
+    number_of_categories = models.IntegerField(default=2)
 
     def get_num_categories(self):
         return self.number_of_categories
@@ -34,6 +34,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 # https://gist.github.com/jrosebr1/2140738
 # class FileValidator(object):
 
@@ -42,7 +43,7 @@ class Image(models.Model):
      category = models.ForeignKey(Category, on_delete=models.CASCADE)
     #  validator = FileValidator(max_size=MAX_FILE_SIZE)
      file = models.ImageField(blank=False, 
-                            upload_to='PN_files/%Y/%m/%d/', 
+                            upload_to= 'PN_files/%Y/%m/%d/', 
                             verbose_name="Files", 
                             validators=[validate_image_file_extension],
                             #help_text=f'Allowed size is {MAX_FILE_SIZE / (1024*1024)} MBs'
@@ -50,3 +51,6 @@ class Image(models.Model):
 
 # upload_to='PN_files/%Y/%m/%d/'
 
+def path_to_image():
+    
+    pass
