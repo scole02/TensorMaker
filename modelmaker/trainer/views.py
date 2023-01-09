@@ -13,7 +13,8 @@ def fileupload():
 def save_categories(request, params_id):
     trained = False
     if(request.method == "POST"):
-        CategoryFormSet = formset_factory(CategoryFileForm, extra=3)
+        params_model = ModelTrainingParams.objects.get(pk=params_id)
+        CategoryFormSet = formset_factory(CategoryFileForm, extra=params_model.get_num_categories())
         formset = CategoryFormSet(request.POST, request.FILES)
         print(request.FILES)
         for form, form_key in zip(formset, request.FILES.keys()): # loop through categories
@@ -23,7 +24,6 @@ def save_categories(request, params_id):
                 category.model = ModelTrainingParams.objects.get(pk=params_id)
                 category.save()
                 # print(form.clean())
-                # for form_key in request.FILES.keys():
                 files = request.FILES.getlist(form_key)
                 # print(form_key)
                 # print(files)
@@ -39,32 +39,14 @@ def save_categories(request, params_id):
                 submitted = True
                 error = True
                 # get the parameters model and make a form
-                params_model = ModelTrainingParams.objects.get(pk=params_id)
 
-                return render(request, 'trainer/setup.html', {'params_model':params_model, 'submitted':submitted, 'error':error}) 
+                return render(request, 'trainer/setup.html', {'params_model':params_model, 'submitted':submitted, 'error':error, 'formset':CategoryFormSet}) 
 
-            #     for files in request.FILES.values(): # save all files to each category
-            #         print(files)
-            #         for f in files:
-            #             File.objects.get_or_create(category=Category(id=category.id, file=f))
-            # else:
-            #     print("form not valid")
-            #     print(form.errors)
-        # f = CategoryForm(request.POST, request.FILES)
-        # if f.is_valid():
-        #     f.save()
-        # else:
-        #     print(f.errors)    
-        # print(request.POST)
-        # print(request.FILES)
-        
-    # else:    
     return render(request, 'trainer/training.html')
    
 
 def setup_page(request):
     submitted = False
-    
     if(request.method == "POST"):
         params_form= TrainingParamForm(request.POST)
         if params_form.is_valid():
@@ -75,7 +57,7 @@ def setup_page(request):
             return render(request, 'trainer/setup.html', {'submitted':True, 'formset':CategoryFormSet, 'params_model':params_model})
                 
     else:
-        params_form = TrainingParamForm
+        params_form = TrainingParamForm()
         if 'submitted' in request.GET:
             submitted = True
             

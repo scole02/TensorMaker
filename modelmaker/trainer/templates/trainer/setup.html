@@ -9,8 +9,8 @@
             <div class="card-body">
                 <h2><b>Simple Classification Trainer:</b> Setup</h2>
                 <center><p>valid file formats: .jpg, .jpeg, .png,(normal image file formats...)</p></center>
-                <h4>Model Name:{{params_obj.model_name}}</h4>
-                <h4>Number of Categories: {{params_obj.number_of_categories}} </h4>
+                <h4>Model Name:{{ params_model.model_name }}</h4>
+                <h4>Number of Categories: {{ params_model.number_of_categories }} </h4>
                 <form action="{% url 'trainer:save_categories' params_model.id %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ formset.management_form }}

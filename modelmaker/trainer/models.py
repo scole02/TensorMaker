@@ -17,7 +17,7 @@ MAX_FILE_SIZE = 24 * 1024 * 1024 # 24 MBs
 # Create your models here.
 class ModelTrainingParams(models.Model):
     model_name = models.CharField(max_length=200)
-    number_of_categories = models.IntegerField(default=2)
+    number_of_categories = models.IntegerField(default=1)
 
     def get_num_categories(self):
         return self.number_of_categories
