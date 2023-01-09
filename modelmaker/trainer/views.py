@@ -3,12 +3,14 @@ from django.http import HttpResponseRedirect, Http404
 from .forms import TrainingParamForm, CategoryForm, CategoryFileForm
 from django.forms import formset_factory
 from .models import Image, Category, ModelTrainingParams
+from .tasks import train_model
 
 def label(request):
     return render(request, 'trainer/label.html')
 
-def fileupload():
-    pass
+def training(params_id):
+    train_model.delay(params_id)
+    
 
 def save_categories(request, params_id):
     trained = False
@@ -42,9 +44,9 @@ def save_categories(request, params_id):
 
                 return render(request, 'trainer/setup.html', {'params_model':params_model, 'submitted':submitted, 'error':error, 'formset':CategoryFormSet}) 
 
+    training(params_model.id) 
     return render(request, 'trainer/training.html')
    
-
 def setup_page(request):
     submitted = False
     if(request.method == "POST"):
@@ -65,5 +67,4 @@ def setup_page(request):
 
 # Create your views here. 
 def index(request):
-
     return render(request, 'trainer/base.html')
