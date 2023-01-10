@@ -12,5 +12,6 @@ urlpatterns = [
     path('label', views.label, name='label'),
     path('<int:params_id>/save_categories', views.save_categories, name='save_categories'),
     path('<int:params_id>/training', views.training, name='training'),
+    path('<uuid:task_id>/get_training_progress', views.get_training_progress, name='get_training_progress'),
 
 ]

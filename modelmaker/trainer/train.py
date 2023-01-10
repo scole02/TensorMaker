@@ -76,7 +76,8 @@ class MyDataset(torch.utils.data.Dataset):
 #     val_dataset = MyDataset(img_paths[int(len(img_paths) * train_split):], data_transforms['val'])
 #     return  (train_dataset, val_dataset)
 
-def start_training(params_id:int):
+def start_training(self, params_id:int):
+    print(self.request.id)
     train_split = 0.8
     files = []
     className = ModelTrainingParams.objects.get(id=params_id).model_name
@@ -86,7 +87,7 @@ def start_training(params_id:int):
     # val_dataset = datasets.ImageFolder(os.path.dirname(val_dirname), data_transforms['val'])
     params_model = ModelTrainingParams.objects.get(pk=params_id)
     categories = Category.objects.filter(model=params_model)
-    print(categories)
+    # print(categories)
 
     train_dataset = MyDataset(transform=data_transforms['train'])
     val_dataset = MyDataset(transform=data_transforms['val'])
@@ -104,7 +105,7 @@ def start_training(params_id:int):
             img_path_list=img_paths[int(len(img_paths) * train_split):],
             clas=c.name
         )
-        print(int(len(img_paths) * train_split))
+        # print(int(len(img_paths) * train_split))
     
     print(f'len train:{len(train_dataset)} len val: {len(val_dataset)}')
     train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=4,
@@ -128,9 +129,9 @@ def start_training(params_id:int):
     optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
     # Decay LR by a factor of 0.1 every 7 epochs
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
-    train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataset_sizes, dataloaders, device)
+    train_model(self, model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataset_sizes, dataloaders, device)
 
-def train_model(model, criterion, optimizer, scheduler, dataset_sizes, dataloaders, device, num_epochs=25):
+def train_model(self, model, criterion, optimizer, scheduler, dataset_sizes, dataloaders, device, num_epochs=15):
     since = time.time()
 
     best_model_wts = copy.deepcopy(model.state_dict())
@@ -139,7 +140,9 @@ def train_model(model, criterion, optimizer, scheduler, dataset_sizes, dataloade
     for epoch in range(num_epochs):
         print(f'Epoch {epoch}/{num_epochs - 1}')
         print('-' * 10)
-
+        self.update_state(state='PROGRESS', 
+                          meta={'current_epoch': epoch, 
+                                'total_epochs': num_epochs})
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
             if phase == 'train':

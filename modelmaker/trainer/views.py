@@ -1,18 +1,30 @@
+import json
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from .forms import TrainingParamForm, CategoryForm, CategoryFileForm
 from django.forms import formset_factory
 from .models import Image, Category, ModelTrainingParams
 from .tasks import train_model
 from .train import start_training
+from celery.result import AsyncResult
 
 def label(request):
     return render(request, 'trainer/label.html')
 
 def training(params_id):
-    # train_model.delay(params_id)
-    start_training(params_id)
-    
+    task_id = train_model.delay(params_id)
+    print("Task ID: ", task_id)
+    # task_id = start_training(params_id)
+    return
+
+def get_training_progress(request, task_id):
+    result = AsyncResult(str(task_id))
+    response_data = {
+        'state': result.state,
+        'details': result.info,
+    }
+    return HttpResponse(json.dumps(response_data), content_type='application/json')
+
 
 def save_categories(request, params_id):
     trained = False
@@ -46,7 +58,7 @@ def save_categories(request, params_id):
 
                 return render(request, 'trainer/setup.html', {'params_model':params_model, 'submitted':submitted, 'error':error, 'formset':CategoryFormSet}) 
 
-    training(params_model.id) 
+    task_id = training(params_model.id) 
     return render(request, 'trainer/training.html')
    
 def setup_page(request):
