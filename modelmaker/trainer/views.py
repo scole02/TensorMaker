@@ -4,12 +4,14 @@ from .forms import TrainingParamForm, CategoryForm, CategoryFileForm
 from django.forms import formset_factory
 from .models import Image, Category, ModelTrainingParams
 from .tasks import train_model
+from .train import start_training
 
 def label(request):
     return render(request, 'trainer/label.html')
 
 def training(params_id):
-    train_model.delay(params_id)
+    # train_model.delay(params_id)
+    start_training(params_id)
     
 
 def save_categories(request, params_id):

@@ -6,6 +6,7 @@ import torch.backends.cudnn as cudnn
 import numpy as np
 import torchvision
 from torchvision import datasets, models, transforms
+from torchvision.datasets.folder import default_loader
 from torch.utils.data import Dataset, DataLoader
 import matplotlib.pyplot as plt
 from skimage import io, transform
@@ -13,6 +14,7 @@ import time
 import os, shutil
 import copy
 from .models import ModelTrainingParams, Category, Image
+from typing import Tuple
 # Data augmentation and normalization for training
 # Just normalization for validation
 data_transforms = {
@@ -31,60 +33,78 @@ data_transforms = {
 }
 
 class MyDataset(torch.utils.data.Dataset):
-    def __init__(self, img_list, augmentations):
+    def __init__(self, transform):
         super(MyDataset, self).__init__()
-        self.img_list = img_list
-        self.augmentations = augmentations
+        self.imgs = [] # list of path strings
+        self.labels = [] # list of ints where int corresponds to class idx for that img
+        self.classes = [] # list of class strings
+        self.transform = transform
 
     def __len__(self):
-        return len(self.img_list)
+        return len(self.imgs)
 
     def __getitem__(self, idx):
-        img = self.img_list[idx]
-        return self.augmentations(img)
+        # returns:
+        #   tuple: (img, label) where img is loaded using default loader from pytorch
+        #           and target is class index
+        img_name = self.imgs[idx]
+        img = default_loader(img_name)
+        img = self.transform(img) # "normalizes" image and makes it a tensor
+        label = self.labels[idx]
+        
+        return img, label
+    
+    def addImages(self, img_path_list:list, clas:str):
+        self.imgs += img_path_list
+        
+        # add class if not already in classes
+        if clas in self.classes:
+            class_idx = self.classes.index(clas)
+        else:
+            class_idx = len(self.classes)
+            self.classes.append(clas)
+        
+        # set class idx for each img we added to dataset
+        self.labels += ([class_idx] * len(img_path_list))
 
-def start_training(params_id):
+# def createClassDatasets(category:Category, train_split:float) -> Tuple[MyDataset, MyDataset]:
+#     # returns (train_dataset, val_dataset)
+#     category_images = list(Image.objects.filter(category=category))
+#     img_paths = [p.file.path for p in category_images]
+
+#     train_dataset = MyDataset(img_paths[:int(len(img_paths) * train_split)], data_transforms['train'])
+#     val_dataset = MyDataset(img_paths[int(len(img_paths) * train_split):], data_transforms['val'])
+#     return  (train_dataset, val_dataset)
+
+def start_training(params_id:int):
     train_split = 0.8
-    # form = NameForm(request.POST)
-    # files = request.FILES.getlist('classFiles1')
-    # className = request.POST.get('classinput')
-    # submitbutton= request.POST.get('Submit')
     files = []
     className = ModelTrainingParams.objects.get(id=params_id).model_name
-    print(className)
-    # temp_file = dir[0].temporary_file_path
-    # paths = [f.temporary_file_path() for f in files]
-    
-    # # make directory for class files
-    # train_dirname = os.path.join(os.getcwd(), "media", "train", className)
-    # val_dirname = os.path.join(os.getcwd(), "media", "val", className)
-    
-    # if directories do not exist, make them and copy over temp files
-    # if not os.path.exists(train_dirname):
-    #     os.makedirs(train_dirname)  
-    #     for p in paths[:int( len(paths) * train_split)]:
-    #         new_path = os.path.join(train_dirname, os.path.basename(p))
-    #         shutil.copy(p, new_path)
-
-    # if not os.path.exists(val_dirname):
-    #     os.makedirs(val_dirname)
-    #     for p in paths[int( len(paths) * train_split):]:
-    #         new_path = os.path.join(val_dirname, os.path.basename(p))
-    #         shutil.copy(p, new_path)
-    
-    
     
     # ImageFolder expects a folder with name of class and then images
     # train_dataset = datasets.ImageFolder(os.path.dirname(train_dirname), data_transforms['train'])
     # val_dataset = datasets.ImageFolder(os.path.dirname(val_dirname), data_transforms['val'])
-    print("Images:")
     params_model = ModelTrainingParams.objects.get(pk=params_id)
     categories = Category.objects.filter(model=params_model)
-    cat1_images = list(Image.objects.filter(category=categories[0]))
-    # cat2_images = list(Image.objects.filter(category=categories[1]))
+    print(categories)
+
+    train_dataset = MyDataset(transform=data_transforms['train'])
+    val_dataset = MyDataset(transform=data_transforms['val'])
     
-    # train_dataset = MyDataset([p.path for p in cat1_images])
-    # train_dataset = MyDataset([p.path for p in cat1_images])
+    
+    # add imgs to datasets for each class
+    for c in categories:
+        category_images = list(Image.objects.filter(category=c))
+        img_paths = [p.file.path for p in category_images]
+        train_dataset.addImages(
+            img_path_list=img_paths[:int(len(img_paths) * train_split)],
+            clas=c.name
+        )
+        val_dataset.addImages(
+            img_path_list=img_paths[int(len(img_paths) * train_split):],
+            clas=c.name
+        )
+        print(int(len(img_paths) * train_split))
     
     print(f'len train:{len(train_dataset)} len val: {len(val_dataset)}')
     train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=4,
