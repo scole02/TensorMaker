@@ -1,8 +1,13 @@
 {% extends 'trainer/base.html' %}
 
-{% block content %}
+ {% block content %}
+ <center><h1> Model is TRAINING...</h1></center>
+ {% comment %}
 <div>
-    <center><h1> Model is TRAINING...</h1></center>
+    
+    <div class="container">
+        <progress id="file" max="100" value="70"> 70% </progress>
+    </div>
     <div id="progress-wrapper">
         <div id="progress-bar" style="background-color: blue; width: 0%;">&nbsp;</div>
         <div id="progress-bar-message">Waiting for training to start...</div>
@@ -18,8 +23,9 @@
                 });
             });
         }
-        var progressUrl = '{% url "training_progress" task_id %}';  // django template usage
+        var progressUrl = '{% url "trainer:get_training_progress" task_id %}';  // django template usage
         updateProgress(progressUrl);
     </script>
 </div>
-{% endblock %}
+{% endcomment %}
+{% endblock %} 

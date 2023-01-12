@@ -16,7 +16,7 @@ MAX_FILE_SIZE = 24 * 1024 * 1024 # 24 MBs
 
 # Create your models here.
 class ModelTrainingParams(models.Model):
-    model_name = models.CharField(max_length=200)
+    model_name = models.CharField(max_length=200, unique=True)
     number_of_categories = models.IntegerField(default=2)
 
     def get_num_categories(self):
@@ -33,7 +33,9 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
+    
+    class Meta:
+        unique_together = ["model", "name"]
 
 # https://gist.github.com/jrosebr1/2140738
 # class FileValidator(object):
